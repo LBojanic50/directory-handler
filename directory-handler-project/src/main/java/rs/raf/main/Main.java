@@ -37,28 +37,18 @@ public class Main {
             String[] splitCommand = command.split(" ");
             if (splitCommand[0].equals("copyFiles")) {
                 if (splitCommand.length == 4) {
-                    if (splitCommand[2].equals("default")) {
-                        if (splitCommand[3].equals("true")) {
-                            directoryHandler.copyFiles(splitCommand[1], null, true);
-                        }
-                        else if (splitCommand[3].equals("false")) {
-                            directoryHandler.copyFiles(splitCommand[1], null, false);
-                        }
-                        else {
-                            throw new InvalidParametersException(command);
-                        }
+                    if (splitCommand[3].equals("true")) {
+                        directoryHandler.copyFiles(splitCommand[1], splitCommand[2], true);
+                    }
+                    else if (splitCommand[3].equals("false")) {
+                        directoryHandler.copyFiles(splitCommand[1], splitCommand[2], false);
                     }
                     else {
-                        if (splitCommand[3].equals("true")) {
-                            directoryHandler.copyFiles(splitCommand[1], splitCommand[2], true);
-                        }
-                        else if (splitCommand[3].equals("false")) {
-                            directoryHandler.copyFiles(splitCommand[1], splitCommand[2], false);
-                        }
-                        else {
-                            throw new InvalidParametersException(command);
-                        }
+                        throw new InvalidParametersException(splitCommand[3]);
                     }
+                }
+                else{
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -72,7 +62,7 @@ public class Main {
                     }
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -81,7 +71,7 @@ public class Main {
                     directoryHandler.createDirectories(splitCommand[1]);
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -90,7 +80,7 @@ public class Main {
                     directoryHandler.createFiles(splitCommand[1]);
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -104,7 +94,7 @@ public class Main {
                     }
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -113,7 +103,7 @@ public class Main {
                     directoryHandler.deleteFiles(splitCommand[1]);
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -127,7 +117,7 @@ public class Main {
                             directoryHandler.downloadFiles(splitCommand[1], null, false);
                         }
                         else {
-                            throw new InvalidParametersException(command);
+                            throw new InvalidParametersException(splitCommand[3]);
                         }
                     }
                     else {
@@ -138,12 +128,12 @@ public class Main {
                             directoryHandler.downloadFiles(splitCommand[1], splitCommand[2], false);
                         }
                         else {
-                            throw new InvalidParametersException(command);
+                            throw new InvalidParametersException(splitCommand[3]);
                         }
                     }
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -152,7 +142,7 @@ public class Main {
                     directoryHandler.printConfig(directoryHandler.getConfig(splitCommand[1]));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -161,7 +151,7 @@ public class Main {
                     System.out.println(directoryHandler.getDirectorySize(splitCommand[1]));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -170,7 +160,7 @@ public class Main {
                     System.out.println(directoryHandler.getFileCount(splitCommand[1]));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -188,7 +178,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[2]);
                     }
                     if (splitCommand[3].equals("true")) {
                         includeFiles = true;
@@ -197,7 +187,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[3]);
                     }
                     if (splitCommand[4].equals("true")) {
                         includeDirectories = true;
@@ -206,7 +196,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     sortingType = switch (splitCommand[5]) {
                         case "none" -> SortingType.NONE;
@@ -214,17 +204,17 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[5]);
                     };
                     orderType = switch (splitCommand[6]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[6]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFileListInDirectory(splitCommand[1], recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -233,7 +223,7 @@ public class Main {
                     System.out.println(directoryHandler.getFileSize(splitCommand[1]));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -253,7 +243,7 @@ public class Main {
                         dateCreated = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     if (splitCommand[5].equals("true")) {
                         dateModified = true;
@@ -262,7 +252,7 @@ public class Main {
                         dateModified = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     if (splitCommand[6].equals("true")) {
                         recursive = true;
@@ -271,7 +261,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[6]);
                     }
                     if (splitCommand[7].equals("true")) {
                         includeFiles = true;
@@ -280,7 +270,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[7]);
                     }
                     if (splitCommand[8].equals("true")) {
                         includeDirectories = true;
@@ -289,7 +279,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[8]);
                     }
                     sortingType = switch (splitCommand[9]) {
                         case "none" -> SortingType.NONE;
@@ -297,17 +287,17 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[9]);
                     };
                     orderType = switch (splitCommand[10]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[10]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesForDateRange(splitCommand[1], splitCommand[2], splitCommand[3], dateCreated, dateModified, recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -325,7 +315,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[3]);
                     }
                     if (splitCommand[4].equals("true")) {
                         includeFiles = true;
@@ -334,7 +324,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     if (splitCommand[5].equals("true")) {
                         includeDirectories = true;
@@ -343,7 +333,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     sortingType = switch (splitCommand[6]) {
                         case "none" -> SortingType.NONE;
@@ -351,17 +341,17 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[6]);
                     };
                     orderType = switch (splitCommand[7]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[7]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesForExcludedExtensions(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -379,7 +369,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[3]);
                     }
                     if (splitCommand[4].equals("true")) {
                         includeFiles = true;
@@ -388,7 +378,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     if (splitCommand[5].equals("true")) {
                         includeDirectories = true;
@@ -397,7 +387,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     sortingType = switch (splitCommand[6]) {
                         case "none" -> SortingType.NONE;
@@ -405,17 +395,17 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[6]);
                     };
                     orderType = switch (splitCommand[7]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[7]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesForExtensions(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -433,7 +423,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     if (splitCommand[5].equals("true")) {
                         includeFiles = true;
@@ -442,7 +432,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     if (splitCommand[6].equals("true")) {
                         includeDirectories = true;
@@ -451,7 +441,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[6]);
                     }
                     sortingType = switch (splitCommand[7]) {
                         case "none" -> SortingType.NONE;
@@ -459,17 +449,17 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[7]);
                     };
                     orderType = switch (splitCommand[8]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[8]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesForExtensionsAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -481,6 +471,12 @@ public class Main {
                     SortingType sortingType;
                     SearchType searchType;
                     OrderType orderType;
+                    searchType = switch (splitCommand[3]) {
+                        case "contains" -> SearchType.CONTAINS;
+                        case "startsWith" -> SearchType.STARTS_WITH;
+                        case "endsWith" -> SearchType.ENDS_WITH;
+                        default -> throw new InvalidParametersException(splitCommand[3]);
+                    };
                     if (splitCommand[4].equals("true")) {
                         recursive = true;
                     }
@@ -488,7 +484,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     if (splitCommand[5].equals("true")) {
                         includeFiles = true;
@@ -497,7 +493,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     if (splitCommand[6].equals("true")) {
                         includeDirectories = true;
@@ -506,31 +502,25 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
-                    searchType = switch (splitCommand[3]) {
-                        case "contains" -> SearchType.CONTAINS;
-                        case "startsWith" -> SearchType.STARTS_WITH;
-                        case "endsWith" -> SearchType.ENDS_WITH;
-                        default -> throw new InvalidParametersException(command);
-                    };
                     sortingType = switch (splitCommand[7]) {
                         case "none" -> SortingType.NONE;
                         case "name" -> SortingType.NAME;
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[7]);
                     };
                     orderType = switch (splitCommand[8]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[8]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesForSearchName(splitCommand[1], splitCommand[2], searchType, recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -548,7 +538,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     if (splitCommand[5].equals("true")) {
                         includeFiles = true;
@@ -557,7 +547,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     if (splitCommand[6].equals("true")) {
                         includeDirectories = true;
@@ -566,7 +556,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[6]);
                     }
                     sortingType = switch (splitCommand[7]) {
                         case "none" -> SortingType.NONE;
@@ -574,17 +564,17 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[7]);
                     };
                     orderType = switch (splitCommand[8]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[8]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesForSearchNameAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -602,7 +592,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     if (splitCommand[5].equals("true")) {
                         includeFiles = true;
@@ -611,7 +601,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     if (splitCommand[6].equals("true")) {
                         includeDirectories = true;
@@ -620,7 +610,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[6]);
                     }
                     sortingType = switch (splitCommand[7]) {
                         case "none" -> SortingType.NONE;
@@ -628,17 +618,17 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[7]);
                     };
                     orderType = switch (splitCommand[8]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[8]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesForSearchNameAndExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -656,7 +646,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     if (splitCommand[6].equals("true")) {
                         includeFiles = true;
@@ -665,7 +655,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[6]);
                     }
                     if (splitCommand[7].equals("true")) {
                         includeDirectories = true;
@@ -674,7 +664,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[7]);
                     }
                     sortingType = switch (splitCommand[8]) {
                         case "none" -> SortingType.NONE;
@@ -682,17 +672,17 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[8]);
                     };
                     orderType = switch (splitCommand[9]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[9]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesForSearchNameAndExtensionsAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], splitCommand[4], recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -710,7 +700,7 @@ public class Main {
                         recursive = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[3]);
                     }
                     if (splitCommand[4].equals("true")) {
                         includeFiles = true;
@@ -719,7 +709,7 @@ public class Main {
                         includeFiles = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[4]);
                     }
                     if (splitCommand[5].equals("true")) {
                         includeDirectories = true;
@@ -728,7 +718,7 @@ public class Main {
                         includeDirectories = false;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[5]);
                     }
                     sortingType = switch (splitCommand[6]) {
                         case "none" -> SortingType.NONE;
@@ -736,44 +726,34 @@ public class Main {
                         case "dateCreated" -> SortingType.DATE_CREATED;
                         case "dateModified" -> SortingType.DATE_MODIFIED;
                         case "size" -> SortingType.SIZE;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[6]);
                     };
                     orderType = switch (splitCommand[7]) {
                         case "ascending" -> OrderType.ASCENDING;
                         case "descending" -> OrderType.DESCENDING;
-                        default -> throw new InvalidParametersException(command);
+                        default -> throw new InvalidParametersException(splitCommand[7]);
                     };
                     directoryHandler.printFileList(directoryHandler.getFilesWithNames(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType));
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("moveFiles")) {
                 if (splitCommand.length == 4) {
-                    if (splitCommand[2].equals("default")) {
-                        if (splitCommand[3].equals("true")) {
-                            directoryHandler.moveFiles(splitCommand[1], null, true);
-                        }
-                        else if (splitCommand[3].equals("false")) {
-                            directoryHandler.moveFiles(splitCommand[1], null, false);
-                        }
-                        else {
-                            throw new InvalidParametersException(command);
-                        }
+                    if (splitCommand[3].equals("true")) {
+                        directoryHandler.moveFiles(splitCommand[1], splitCommand[2], true);
+                    }
+                    else if (splitCommand[3].equals("false")) {
+                        directoryHandler.moveFiles(splitCommand[1], splitCommand[2], false);
                     }
                     else {
-                        if (splitCommand[3].equals("true")) {
-                            directoryHandler.moveFiles(splitCommand[1], splitCommand[2], true);
-                        }
-                        else if (splitCommand[3].equals("false")) {
-                            directoryHandler.moveFiles(splitCommand[1], splitCommand[2], false);
-                        }
-                        else {
-                            throw new InvalidParametersException(command);
-                        }
+                        throw new InvalidParametersException(splitCommand[3]);
                     }
+                }
+                else{
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -782,7 +762,7 @@ public class Main {
                     directoryHandler.renameFile(splitCommand[1], splitCommand[2]);
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -800,12 +780,12 @@ public class Main {
                         configUpdateType = ConfigUpdateType.ADD;
                     }
                     else {
-                        throw new InvalidParametersException(command);
+                        throw new InvalidParametersException(splitCommand[3]);
                     }
                     directoryHandler.updateConfig(repositoryName, configString, configUpdateType);
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
@@ -814,7 +794,7 @@ public class Main {
                     directoryHandler.writeToFile(splitCommand[1], splitCommand[2]);
                 }
                 else {
-                    throw new InvalidParametersException(command);
+                    throw new InvalidCommandException(command);
                 }
                 System.out.println("Done");
             }
