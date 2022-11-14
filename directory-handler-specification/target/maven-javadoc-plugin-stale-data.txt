@@ -9,14 +9,14 @@
 -source
 '17'
 -sourcepath
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java'
 -author
 -bottom
 'Copyright &#169; 2022. All rights reserved.'
 -charset
 'UTF-8'
 -d
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/target/site/apidocs'
+'D:/JavaProjects/directory-handler/directory-handler-specification/target/site/apidocs'
 -docencoding
 'UTF-8'
 -doctitle
@@ -31,16 +31,16 @@ rs.raf.enums
 rs.raf.exception
 rs.raf.model
 rs.raf.specification
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/config/DirectoryHandlerConfig.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/config/DirectoryWithMaxFileCount.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/enums/ConfigUpdateType.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/enums/OrderType.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/enums/SearchType.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/enums/SortingType.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/exception/DirectoryHandlerExceptions.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/model/LocalFile.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/specification/DirectoryHandlerManager.java'
-'D:/JavaProjects/directory-handler-lbojanic-intellij/directory-handler-specification/src/main/java/rs/raf/specification/IDirectoryHandlerSpecification.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/config/DirectoryHandlerConfig.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/config/DirectoryWithMaxFileCount.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/enums/ConfigUpdateType.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/enums/OrderType.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/enums/SearchType.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/enums/SortingType.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/exception/DirectoryHandlerExceptions.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/model/LocalFile.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/specification/DirectoryHandlerManager.java'
+'D:/JavaProjects/directory-handler/directory-handler-specification/src/main/java/rs/raf/specification/IDirectoryHandlerSpecification.java'
 C:\Users\bojan\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.14.0\jackson-databind-2.14.0.jar = 1667965248936
 C:\Users\bojan\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.14.0\jackson-annotations-2.14.0.jar = 1667965248249
 C:\Users\bojan\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.14.0\jackson-core-2.14.0.jar = 1667965248338
@@ -48,21 +48,21 @@ C:\Users\bojan\.m2\repository\com\google\code\gson\gson\2.10\gson-2.10.jar = 166
 C:\Users\bojan\.m2\repository\commons-io\commons-io\2.11.0\commons-io-2.11.0.jar = 1666176744893
 C:\Users\bojan\.m2\repository\org\apache\commons\commons-lang3\3.12.0\commons-lang3-3.12.0.jar = 1666176744817
 C:\Users\bojan\.m2\repository\org\projectlombok\lombok\1.18.24\lombok-1.18.24.jar = 1654009771504
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\src\main\java = 1666363809334
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\allclasses-index.html = 1668416913208
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\allpackages-index.html = 1668416913211
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\element-list = 1668416912995
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\index-all.html = 1668416913238
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\index.html = 1668416913189
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\jquery-ui.overrides.css = 1668416913283
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\member-search-index.js = 1668416913216
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\module-search-index.js = 1668416913212
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\overview-summary.html = 1668416913240
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\overview-tree.html = 1668416913185
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\package-search-index.js = 1668416913213
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\script.js = 1668416913245
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\search.js = 1668416913247
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\serialized-form.html = 1668416913047
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\stylesheet.css = 1668416913243
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\tag-search-index.js = 1668416913217
-D:\JavaProjects\directory-handler-lbojanic-intellij\directory-handler-specification\target\site\apidocs\type-search-index.js = 1668416913215
+D:\JavaProjects\directory-handler\directory-handler-specification\src\main\java = 1668418167266
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\allclasses-index.html = 1668430820467
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\allpackages-index.html = 1668430820470
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\element-list = 1668430820121
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\index-all.html = 1668430820505
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\index.html = 1668430820446
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\jquery-ui.overrides.css = 1668430820543
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\member-search-index.js = 1668430820479
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\module-search-index.js = 1668430820472
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\overview-summary.html = 1668430820507
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\overview-tree.html = 1668430820441
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\package-search-index.js = 1668430820475
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\script.js = 1668430820513
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\search.js = 1668430820515
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\serialized-form.html = 1668430820221
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\stylesheet.css = 1668430820511
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\tag-search-index.js = 1668430820480
+D:\JavaProjects\directory-handler\directory-handler-specification\target\site\apidocs\type-search-index.js = 1668430820476
