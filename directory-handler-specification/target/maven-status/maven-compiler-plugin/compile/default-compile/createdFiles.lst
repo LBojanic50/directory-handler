@@ -12,6 +12,7 @@ rs\raf\specification\DirectoryHandlerManager.class
 rs\raf\exception\DirectoryHandlerExceptions$NoFileAtPathException.class
 rs\raf\exception\DirectoryHandlerExceptions.class
 rs\raf\enums\SortingType.class
+rs\raf\exception\DirectoryHandlerExceptions$BadFiltersException.class
 rs\raf\exception\DirectoryHandlerExceptions$ValueInConfigCannotBeLessThanOneException.class
 rs\raf\config\DirectoryHandlerConfig.class
 rs\raf\enums\ConfigUpdateType.class

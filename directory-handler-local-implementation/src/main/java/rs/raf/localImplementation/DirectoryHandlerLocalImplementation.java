@@ -821,8 +821,23 @@ public class DirectoryHandlerLocalImplementation implements IDirectoryHandlerSpe
                 switch (filter) {
                     case "name" -> filteredLocalFile.setName(localFile.getFile().getName());
                     case "size" -> filteredLocalFile.setSize(String.valueOf(localFile.getFileMetadata().size()));
-                    case "dateCreated" -> filteredLocalFile.setDateCreated(String.valueOf(localFile.getFileMetadata().creationTime()));
-                    case "dateModified" -> filteredLocalFile.setDateModified(String.valueOf(localFile.getFileMetadata().lastModifiedTime()));
+                    case "dateCreated" -> {
+                        if(localFile.getFileMetadata().creationTime() != null){
+                            filteredLocalFile.setDateCreated(String.valueOf(String.valueOf(localFile.getFileMetadata().creationTime())));
+                        }
+                        else{
+                            filteredLocalFile.setDateCreated("undefined");
+                        }
+
+                    }
+                    case "dateModified" -> {
+                        if(localFile.getFileMetadata().lastModifiedTime() != null){
+                            filteredLocalFile.setDateModified(String.valueOf(localFile.getFileMetadata().lastModifiedTime()));
+                        }
+                        else{
+                            filteredLocalFile.setDateCreated("undefined");
+                        }
+                    }
                 }
             }
             filteredLocalFileList.add(filteredLocalFile);

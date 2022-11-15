@@ -754,10 +754,32 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
             FilteredGoogleDriveFile filteredLocalFile = new FilteredGoogleDriveFile();
             for(String filter : filters){
                 switch (filter) {
-                    case "name" -> filteredLocalFile.setName(file.getName());
+                    case "name" -> {
+                        if(file.getName() != null){
+                            filteredLocalFile.setName(file.getName());
+                        }
+                        else{
+                            filteredLocalFile.setName("undefined");
+                        }
+                    }
                     case "size" -> filteredLocalFile.setSize(String.valueOf(file.size()));
-                    case "dateCreated" -> filteredLocalFile.setDateCreated(String.valueOf(file.getCreatedTime()));
-                    case "dateModified" -> filteredLocalFile.setDateModified(String.valueOf(file.getModifiedTime()));
+                    case "dateCreated" -> {
+                        if(file.getCreatedTime() != null){
+                            filteredLocalFile.setDateCreated(String.valueOf(file.getCreatedTime()));
+                        }
+                        else{
+                            filteredLocalFile.setDateCreated("undefined");
+                        }
+
+                    }
+                    case "dateModified" -> {
+                        if(file.getModifiedTime() != null){
+                            filteredLocalFile.setDateModified(String.valueOf(file.getModifiedTime()));
+                        }
+                        else{
+                            filteredLocalFile.setDateCreated("undefined");
+                        }
+                    }
                 }
             }
             filteredLocalFileList.add(filteredLocalFile);
