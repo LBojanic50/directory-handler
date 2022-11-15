@@ -2,15 +2,11 @@ package rs.raf.util;
 
 import rs.raf.model.LocalFile;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
-
-import rs.raf.exception.DirectoryHandlerExceptions.*;
-import rs.raf.specification.DirectoryHandlerManager;
 
 public class LocalComparators {
     public static class CreationDateComparator implements Comparator<LocalFile> {

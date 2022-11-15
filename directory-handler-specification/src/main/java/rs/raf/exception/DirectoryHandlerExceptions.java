@@ -108,4 +108,17 @@ public class DirectoryHandlerExceptions {
             super(String.format("Value %s cannot be less than 1!", value));
         }
     }
+    /**
+     * Occurs if value specified in config is less than one.
+     */
+    public static class BadFiltersException extends Exception {
+        /**
+         * BadFiltersException constructor.
+         *
+         * @param filters filters.
+         */
+        public BadFiltersException(final String filters) {
+            super(String.format("Bad filters %s!", filters));
+        }
+    }
 }

@@ -10,24 +10,14 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 
 import rs.raf.exception.DirectoryHandlerExceptions.*;
 
 /**
  * Methods to use when using DirectoryHandler
  */
-public interface IDirectoryHandlerSpecification<T> {
-    /**
-     * Sets the root directory of the current session (can contain multiple repositories).
-     *
-     * @param rootPathString path to the root directory.
-     * @throws IOException                               for IO reasons.
-     * @throws BadPathException                          if path is in a bad format.
-     * @throws NoFileAtPathException                     if no file exists at path.
-     * @throws InvalidParametersException                if parameter(s) are invalid.
-     * @throws GeneralSecurityException if Google Drive fails to authenticate.
-     */
-    void setWorkingDirectory(final String rootPathString) throws NoFileAtPathException, GeneralSecurityException, InvalidParametersException, IOException, BadPathException;
+public interface IDirectoryHandlerSpecification<T1, T2> {
     /**
      * Copies one or more files at the path(s) specified to the destination directory path with the option of overwriting. Multiple paths are delimited with -more-. Paths are slash delimited and should start with a repository name.
      *
@@ -131,6 +121,15 @@ public interface IDirectoryHandlerSpecification<T> {
      */
     void downloadFiles(String filePathsString, String downloadDestinationDirectoryString, boolean overwrite) throws NoFileAtPathException, IOException, MaxFileCountExceededException, BadPathException, InvalidParametersException, NonExistentRepositoryException;
     /**
+     * Filters the file list based on comma delimited string of filters.
+     *
+     * @param fileList file list to filter.
+     * @param filtersString comma delimited string of metadata information to display for each file. can be: name, size, dateCreated, dateModified.
+     * @return filtered list.
+     * @throws BadFiltersException if filters are in a bad format.
+     */
+    List<T2> filterFileList(final List<T1> fileList, final String filtersString) throws BadFiltersException;
+    /**
      * Gets the config from the specified repository.
      *
      * @param repositoryName name of the repository to get the config from.
@@ -164,22 +163,6 @@ public interface IDirectoryHandlerSpecification<T> {
      */
     int getFileCount(String directoryPathString) throws BadPathException, NoFileAtPathException, IOException;
     /**
-     * Gets the file list for specified search parameters.
-     *
-     * @param directoryPathString Path of directory to search. Paths are slash delimited and should start with a repository name.
-     * @param recursive           Whether to search recursively.
-     * @param includeFiles        Whether to include files.
-     * @param includeDirectories  Whether to include directories.
-     * @param sortingType         SortingType enum element of the method of sorting to apply. Possible sorting types (SortingType): NONE, NAME, DATE_CREATED, DATE_MODIFIED, SIZE
-     * @param orderType           OrderType enum element of the order type. Can be ASCENDING, DESCENDING.
-     * @return List of files in search result.
-     * @throws IOException                for IO reasons.
-     * @throws BadPathException           if path is in a bad format.
-     * @throws NoFileAtPathException      if no file exists at path.
-     * @throws InvalidParametersException if parameter(s) are invalid.
-     */
-    List<T> getFileListInDirectory(final String directoryPathString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, IOException, BadPathException, NoFileAtPathException;
-    /**
      * Gets the size of a file at the specified path. Paths are slash delimited and should start with a repository name.
      *
      * @param filePathString Path to the file of which to get the size of. Paths are slash delimited and should start with a repository name.
@@ -212,7 +195,7 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws ParseException             if unable to parse strings as dates.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesForDateRange(final String directoryPathString, final String startDate, final String endDate, final boolean dateCreated, final boolean dateModified, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, ParseException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesForDateRange(final String directoryPathString, final String startDate, final String endDate, final boolean dateCreated, final boolean dateModified, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, ParseException, NoFileAtPathException, IOException, BadPathException;
     /**
      * Gets the file list for specified search parameters.
      *
@@ -229,7 +212,7 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws NoFileAtPathException      if no file exists at path.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesForExcludedExtensions(final String directoryPathString, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesForExcludedExtensions(final String directoryPathString, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
     /**
      * Gets the file list for specified search parameters
      *
@@ -246,7 +229,7 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws NoFileAtPathException      if no file exists at path.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesForExtensions(final String directoryPathString, final String searchExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesForExtensions(final String directoryPathString, final String searchExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
     /**
      * Gets the file list for specified search parameters
      *
@@ -264,7 +247,7 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws NoFileAtPathException      if no file exists at path.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesForExtensionsAndExcludedExtensions(final String directoryPathString, final String searchExtensionsString, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesForExtensionsAndExcludedExtensions(final String directoryPathString, final String searchExtensionsString, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
     /**
      * Gets the file list for specified search parameters.
      *
@@ -282,7 +265,7 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws NoFileAtPathException      if no file exists at path.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesForSearchName(final String directoryPathString, final String search, final SearchType searchType, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesForSearchName(final String directoryPathString, final String search, final SearchType searchType, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
     /**
      * Gets the file list for specified search parameters.
      *
@@ -300,7 +283,7 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws NoFileAtPathException      if no file exists at path.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesForSearchNameAndExcludedExtensions(final String directoryPathString, final String search, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesForSearchNameAndExcludedExtensions(final String directoryPathString, final String search, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
     /**
      * Gets the file list for specified search parameters.
      *
@@ -318,7 +301,7 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws NoFileAtPathException      if no file exists at path.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesForSearchNameAndExtensions(final String directoryPathString, final String search, final String searchExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesForSearchNameAndExtensions(final String directoryPathString, final String search, final String searchExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
     /**
      * Gets the file list for specified search parameters.
      *
@@ -337,7 +320,23 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws NoFileAtPathException      if no file exists at path.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesForSearchNameAndExtensionsAndExcludedExtensions(final String directoryPathString, final String search, final String searchExtensionsString, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesForSearchNameAndExtensionsAndExcludedExtensions(final String directoryPathString, final String search, final String searchExtensionsString, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    /**
+     * Gets the file list for specified search parameters.
+     *
+     * @param directoryPathString Path of directory to search. Paths are slash delimited and should start with a repository name.
+     * @param recursive           Whether to search recursively.
+     * @param includeFiles        Whether to include files.
+     * @param includeDirectories  Whether to include directories.
+     * @param sortingType         SortingType enum element of the method of sorting to apply. Possible sorting types (SortingType): NONE, NAME, DATE_CREATED, DATE_MODIFIED, SIZE
+     * @param orderType           OrderType enum element of the order type. Can be ASCENDING, DESCENDING.
+     * @return List of files in search result.
+     * @throws IOException                for IO reasons.
+     * @throws BadPathException           if path is in a bad format.
+     * @throws NoFileAtPathException      if no file exists at path.
+     * @throws InvalidParametersException if parameter(s) are invalid.
+     */
+    List<T1> getFilesInDirectory(final String directoryPathString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, IOException, BadPathException, NoFileAtPathException;
     /**
      * Gets the file list for specified search parameters.
      *
@@ -354,7 +353,7 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws NoFileAtPathException      if no file exists at path.
      * @throws InvalidParametersException if parameter(s) are invalid.
      */
-    List<T> getFilesWithNames(final String directoryPathString, final String searchListString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
+    List<T1> getFilesWithNames(final String directoryPathString, final String searchListString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
     /**
      * Move one or more files at the path(s) specified to the destination directory path with the option of overwriting. Multiple paths are delimited with -more-. Paths are slash delimited and should start with a repository name.
      *
@@ -385,6 +384,17 @@ public interface IDirectoryHandlerSpecification<T> {
      *                                        NoFileAtPathException, IOException, MaxFileCountExceededException, BadPathException, InvalidParameterException, NonExistentRepositoryException, FileExtensionException;
      */
     void renameFile(String filePathString, final String newFileName) throws NoFileAtPathException, IOException, MaxFileCountExceededException, BadPathException, InvalidParametersException, NonExistentRepositoryException, FileExtensionException;
+    /**
+     * Sets the root directory of the current session (can contain multiple repositories).
+     *
+     * @param rootPathString path to the root directory.
+     * @throws IOException                for IO reasons.
+     * @throws BadPathException           if path is in a bad format.
+     * @throws NoFileAtPathException      if no file exists at path.
+     * @throws InvalidParametersException if parameter(s) are invalid.
+     * @throws GeneralSecurityException   if Google Drive fails to authenticate.
+     */
+    void setWorkingDirectory(final String rootPathString) throws NoFileAtPathException, GeneralSecurityException, InvalidParametersException, IOException, BadPathException;
     /**
      * Updates the config of specified repository with the specified config.
      *

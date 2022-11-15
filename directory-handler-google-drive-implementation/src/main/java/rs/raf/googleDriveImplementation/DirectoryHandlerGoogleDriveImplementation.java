@@ -24,6 +24,7 @@ import rs.raf.config.DirectoryWithMaxFileCount;
 import rs.raf.enums.OrderType;
 import rs.raf.enums.SearchType;
 import rs.raf.enums.SortingType;
+import rs.raf.model.FilteredGoogleDriveFile;
 import rs.raf.specification.DirectoryHandlerManager;
 import rs.raf.specification.IDirectoryHandlerSpecification;
 import rs.raf.util.GoogleDriveComparators;
@@ -37,7 +38,7 @@ import java.util.*;
 
 import rs.raf.exception.DirectoryHandlerExceptions.*;
 
-public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHandlerSpecification<File> {
+public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHandlerSpecification<File, FilteredGoogleDriveFile> {
     private static final String APPLICATION_NAME = "directory-handler-lbojanic";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE, DriveScopes.DRIVE_APPDATA, DriveScopes.DRIVE_FILE, DriveScopes.DRIVE_METADATA, DriveScopes.DRIVE_SCRIPTS);
@@ -59,35 +60,6 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
     private String CREDENTIALS_FILE_PATH = null;
     public DirectoryHandlerGoogleDriveImplementation() {
         super();
-    }
-    public static DirectoryHandlerGoogleDriveImplementation getInstance() throws GeneralSecurityException, IOException, InvalidParametersException, NoFileAtPathException, BadPathException {
-        if (instance == null) {
-            instance = new DirectoryHandlerGoogleDriveImplementation();
-        }
-        return instance;
-    }
-    @Override
-    public void setWorkingDirectory(final String rootPathString) throws NoFileAtPathException, GeneralSecurityException, InvalidParametersException, IOException, BadPathException {
-        if (rootPathString.equals("default")) {
-            workingDirectory = Paths.get(System.getProperty("user.dir")).resolve("DirectoryHandlerGoogleDrive");
-        }
-        else if (Paths.get(rootPathString).isAbsolute()) {
-            workingDirectory = Paths.get(rootPathString);
-        }
-        else {
-            throw new RuntimeException();
-        }
-        if (!Files.exists(workingDirectory)) {
-            try {
-                Files.createDirectory(workingDirectory);
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        TOKENS_DIRECTORY_PATH = workingDirectory.resolve("tokens").toString();
-        CREDENTIALS_FILE_PATH = Paths.get(System.getProperty("user.dir")).resolve("directory-handler-project").resolve("credentials.json").toString();
-        initGoogleDrive();
     }
     @Override
     public void copyFiles(String filePathsString, String copyDestinationDirectoryString, final boolean overwrite) throws IOException, BadPathException, NoFileAtPathException, InvalidParametersException, NonExistentRepositoryException, MaxFileCountExceededException {
@@ -351,23 +323,6 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         return 0;
     }
     @Override
-    public List<File> getFileListInDirectory(final String directoryPathString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, IOException, BadPathException, NoFileAtPathException {
-        String directoryId;
-        if (directoryPathString == null) {
-            return getFileListInDirectoryById(null, recursive, includeFiles, includeDirectories, sortingType, orderType);
-        }
-        else {
-            if (badPathCheck(directoryPathString)) {
-                throw new BadPathException(directoryPathString);
-            }
-            if (noFileAtPathCheck(directoryPathString)) {
-                throw new NoFileAtPathException(directoryPathString);
-            }
-            directoryId = getFileIdByPath(directoryPathString);
-        }
-        return getFileListInDirectoryById(directoryId, recursive, includeFiles, includeDirectories, sortingType, orderType);
-    }
-    @Override
     public long getFileSize(String filePathString) throws BadPathException, NoFileAtPathException, IOException {
         filePathString = replaceSlashesInPath(filePathString);
         if (badPathCheck(filePathString)) {
@@ -391,7 +346,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
             throw new InvalidParametersException(startDate + "; " + endDate);
         }
         List<File> fileList = new ArrayList<>();
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         for (File file : directoryToSearchList) {
             if (dateCreated && !dateModified) {
                 Date fileCreationDate = new Date(file.getCreatedTime().getValue());
@@ -422,7 +377,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
     public List<File> getFilesForExcludedExtensions(final String directoryPathString, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException {
         List<String> searchExcludedExtensionsList = List.of(searchExcludedExtensionsString.split(","));
         List<File> fileList = new ArrayList<>();
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         for (File file : directoryToSearchList) {
             for (String excludedExtension : searchExcludedExtensionsList) {
                 if (!file.getName().toLowerCase().endsWith(excludedExtension.toLowerCase())) {
@@ -436,7 +391,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
     public List<File> getFilesForExtensions(final String directoryPathString, final String searchExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException {
         List<String> searchExtensionsList = List.of(searchExtensionsString.split(","));
         List<File> fileList = new ArrayList<>();
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         for (File file : directoryToSearchList) {
             for (String extension : searchExtensionsList) {
                 if (file.getName().toLowerCase().endsWith(extension.toLowerCase())) {
@@ -451,7 +406,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         List<String> searchExtensionsList = List.of(searchExtensionsString.split(","));
         List<String> searchExcludedExtensionsList = List.of(searchExcludedExtensionsString.split(","));
         List<File> fileList = new ArrayList<>();
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         for (File file : directoryToSearchList) {
             for (String excludedExtension : searchExcludedExtensionsList) {
                 if (!file.getName().toLowerCase().endsWith(excludedExtension.toLowerCase())) {
@@ -467,7 +422,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
     }
     @Override
     public List<File> getFilesForSearchName(final String directoryPathString, final String search, final SearchType searchType, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException {
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         List<File> fileList = new ArrayList<>();
         for (File file : directoryToSearchList) {
             if (searchType.equals(SearchType.CONTAINS)) {
@@ -491,7 +446,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
     @Override
     public List<File> getFilesForSearchNameAndExcludedExtensions(final String directoryPathString, final String search, final String searchExcludedExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException {
         List<String> searchExcludedExtensionsList = List.of(searchExcludedExtensionsString.split(","));
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         List<File> fileList = new ArrayList<>();
         for (File file : directoryToSearchList) {
             for (String extension : searchExcludedExtensionsList) {
@@ -507,7 +462,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
     @Override
     public List<File> getFilesForSearchNameAndExtensions(final String directoryPathString, final String search, final String searchExtensionsString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException {
         List<String> searchExtensionsList = List.of(searchExtensionsString.split(","));
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         List<File> fileList = new ArrayList<>();
         for (File file : directoryToSearchList) {
             for (String extension : searchExtensionsList) {
@@ -525,7 +480,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         List<String> searchExtensionsList = List.of(searchExtensionsString.split(","));
         List<String> searchExcludedExtensionsList = List.of(searchExcludedExtensionsString.split(","));
         List<File> fileList = new ArrayList<>();
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         for (File file : directoryToSearchList) {
             for (String excludedExtension : searchExcludedExtensionsList) {
                 if (!file.getName().toLowerCase().endsWith(excludedExtension.toLowerCase())) {
@@ -542,9 +497,26 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         return sortList(fileList, sortingType, orderType);
     }
     @Override
+    public List<File> getFilesInDirectory(final String directoryPathString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, IOException, BadPathException, NoFileAtPathException {
+        String directoryId;
+        if (directoryPathString == null) {
+            return getFileListInDirectoryById(null, recursive, includeFiles, includeDirectories, sortingType, orderType);
+        }
+        else {
+            if (badPathCheck(directoryPathString)) {
+                throw new BadPathException(directoryPathString);
+            }
+            if (noFileAtPathCheck(directoryPathString)) {
+                throw new NoFileAtPathException(directoryPathString);
+            }
+            directoryId = getFileIdByPath(directoryPathString);
+        }
+        return getFileListInDirectoryById(directoryId, recursive, includeFiles, includeDirectories, sortingType, orderType);
+    }
+    @Override
     public List<File> getFilesWithNames(final String directoryPathString, final String searchListString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException {
         List<String> searchList = List.of(searchListString.split(","));
-        List<File> directoryToSearchList = getFileListInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
+        List<File> directoryToSearchList = getFilesInDirectory(directoryPathString, recursive, includeFiles, includeDirectories, SortingType.NONE, OrderType.ASCENDING);
         List<File> foundFiles = new ArrayList<>();
         for (File file : directoryToSearchList) {
             for (String search : searchList) {
@@ -620,6 +592,29 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         deleteFiles(filePathString);
         uploadFile(filePathString, renamedFile);
         clearTemp();
+    }
+    @Override
+    public void setWorkingDirectory(final String rootPathString) throws NoFileAtPathException, GeneralSecurityException, InvalidParametersException, IOException, BadPathException {
+        if (rootPathString.equals("default")) {
+            workingDirectory = Paths.get(System.getProperty("user.dir")).resolve("DirectoryHandlerGoogleDrive");
+        }
+        else if (Paths.get(rootPathString).isAbsolute()) {
+            workingDirectory = Paths.get(rootPathString);
+        }
+        else {
+            throw new RuntimeException();
+        }
+        if (!Files.exists(workingDirectory)) {
+            try {
+                Files.createDirectory(workingDirectory);
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        TOKENS_DIRECTORY_PATH = workingDirectory.resolve("tokens").toString();
+        CREDENTIALS_FILE_PATH = Paths.get(System.getProperty("user.dir")).resolve("directory-handler-project").resolve("credentials.json").toString();
+        initGoogleDrive();
     }
     @Override
     public void updateConfig(final String repositoryName, final String configString, final ConfigUpdateType configUpdateType) throws NoFileAtPathException, NonExistentRepositoryException, IOException, BadPathException, InvalidParametersException, ValueInConfigCannotBeLessThanOneException {
@@ -736,6 +731,44 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         deleteFiles(filePathString);
         clearTemp();
         renameFile(parentPathString + "/" + editedName, fileName);
+    }
+    protected boolean badFiltersCheck(final String filtersString){
+        String[] filters = filtersString.split(",");
+        boolean badFilter = false;
+        for (String filter : filters) {
+            badFilter = switch (filter) {
+                case "name", "size", "dateCreated", "dateModified" -> false;
+                default -> true;
+            };
+        }
+        return badFilter;
+    }
+    @Override
+    public List<FilteredGoogleDriveFile> filterFileList(final List<File> fileList, final String filtersString) throws BadFiltersException {
+        List<FilteredGoogleDriveFile> filteredLocalFileList = new ArrayList<>();
+        if(badFiltersCheck(filtersString)){
+            throw new BadFiltersException(filtersString);
+        }
+        String[] filters = filtersString.split(",");
+        for(File file : fileList){
+            FilteredGoogleDriveFile filteredLocalFile = new FilteredGoogleDriveFile();
+            for(String filter : filters){
+                switch (filter) {
+                    case "name" -> filteredLocalFile.setName(file.getName());
+                    case "size" -> filteredLocalFile.setSize(String.valueOf(file.size()));
+                    case "dateCreated" -> filteredLocalFile.setDateCreated(String.valueOf(file.getCreatedTime()));
+                    case "dateModified" -> filteredLocalFile.setDateModified(String.valueOf(file.getModifiedTime()));
+                }
+            }
+            filteredLocalFileList.add(filteredLocalFile);
+        }
+        return filteredLocalFileList;
+    }
+    public static DirectoryHandlerGoogleDriveImplementation getInstance() throws GeneralSecurityException, IOException, InvalidParametersException, NoFileAtPathException, BadPathException {
+        if (instance == null) {
+            instance = new DirectoryHandlerGoogleDriveImplementation();
+        }
+        return instance;
     }
     protected void authorizeGoogleDriveClient() throws IOException, GeneralSecurityException {
         InputStream credentialsInputStream = new FileInputStream(CREDENTIALS_FILE_PATH);
@@ -981,7 +1014,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
     }
     protected void initGoogleDrive() throws GeneralSecurityException, IOException, NoFileAtPathException, InvalidParametersException, BadPathException {
         authorizeGoogleDriveClient();
-        allFilesList = getFileListInDirectory(null, true, true, true, SortingType.NONE, OrderType.ASCENDING);
+        allFilesList = getFilesInDirectory(null, true, true, true, SortingType.NONE, OrderType.ASCENDING);
         clearTemp();
     }
     protected boolean maxFileCountExceededCheck(final DirectoryHandlerConfig config, String parentDirectoryPathString) throws BadPathException, NoFileAtPathException, IOException {
@@ -1012,7 +1045,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         return false;
     }
     protected boolean nonExistentRepositoryCheck(final String repositoryName) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException {
-        List<File> repositories = getFileListInDirectory(null, false, false, true, SortingType.NONE, OrderType.ASCENDING);
+        List<File> repositories = getFilesInDirectory(null, false, false, true, SortingType.NONE, OrderType.ASCENDING);
         boolean found = false;
         for (File repository : repositories) {
             if (repository.getName().equals(repositoryName)) {

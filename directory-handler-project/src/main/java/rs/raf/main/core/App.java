@@ -20,7 +20,7 @@ import java.util.List;
 
 public class App {
     private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    public void run(final String[] args) throws NoFileAtPathException, NonExistentRepositoryException, InvalidParametersException, IOException, MaxFileCountExceededException, BadPathException, InvalidCommandException, MaxRepositorySizeExceededException, FileExtensionException, ValueInConfigCannotBeLessThanOneException, ParseException, GeneralSecurityException {
+    public void run(final String[] args) throws NoFileAtPathException, NonExistentRepositoryException, InvalidParametersException, IOException, MaxFileCountExceededException, BadPathException, InvalidCommandException, MaxRepositorySizeExceededException, FileExtensionException, ValueInConfigCannotBeLessThanOneException, ParseException, GeneralSecurityException, BadFiltersException {
         IDirectoryHandlerSpecification directoryHandler;
         if (args.length == 2) {
             if (args[0].equals("local")) {
@@ -179,8 +179,8 @@ public class App {
                 }
                 System.out.println("Done");
             }
-            else if (splitCommand[0].equals("getFileListInDirectory")) {
-                if (splitCommand.length == 7) {
+            else if (splitCommand[0].equals("getFilesInDirectory")) {
+                if (splitCommand.length == 8) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -226,7 +226,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[6]);
                     };
-                    List fileList = directoryHandler.getFileListInDirectory(splitCommand[1], recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesInDirectory(splitCommand[1], recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[7]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -246,7 +246,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesForDateRange")) {
-                if (splitCommand.length == 11) {
+                if (splitCommand.length == 12) {
                     boolean dateCreated;
                     boolean dateModified;
                     boolean recursive;
@@ -312,7 +312,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[10]);
                     };
-                    List fileList = directoryHandler.getFilesForDateRange(splitCommand[1], splitCommand[2], splitCommand[3], dateCreated, dateModified, recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesForDateRange(splitCommand[1], splitCommand[2], splitCommand[3], dateCreated, dateModified, recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[11]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -323,7 +323,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesForExcludedExtensions")) {
-                if (splitCommand.length == 8) {
+                if (splitCommand.length == 9) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -369,7 +369,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[7]);
                     };
-                    List fileList = directoryHandler.getFilesForExcludedExtensions(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesForExcludedExtensions(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[8]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -380,7 +380,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesForExtensions")) {
-                if (splitCommand.length == 8) {
+                if (splitCommand.length == 9) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -426,7 +426,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[7]);
                     };
-                    List fileList = directoryHandler.getFilesForExtensions(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesForExtensions(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[8]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -437,7 +437,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesForExtensionsAndExcludedExtensions")) {
-                if (splitCommand.length == 9) {
+                if (splitCommand.length == 10) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -483,7 +483,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[8]);
                     };
-                    List fileList = directoryHandler.getFilesForExtensionsAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesForExtensionsAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[9]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -494,7 +494,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesForSearchName")) {
-                if (splitCommand.length == 9) {
+                if (splitCommand.length == 10) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -547,7 +547,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[8]);
                     };
-                    List fileList = directoryHandler.getFilesForSearchName(splitCommand[1], splitCommand[2], searchType, recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesForSearchName(splitCommand[1], splitCommand[2], searchType, recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[9]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -558,7 +558,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesForSearchNameAndExcludedExtensions")) {
-                if (splitCommand.length == 9) {
+                if (splitCommand.length == 10) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -604,7 +604,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[8]);
                     };
-                    List fileList = directoryHandler.getFilesForSearchNameAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesForSearchNameAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[9]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -615,7 +615,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesForSearchNameAndExtensions")) {
-                if (splitCommand.length == 9) {
+                if (splitCommand.length == 10) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -661,7 +661,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[8]);
                     };
-                    List fileList = directoryHandler.getFilesForSearchNameAndExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesForSearchNameAndExtensions(splitCommand[1], splitCommand[2], splitCommand[3], recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[9]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -672,7 +672,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesForSearchNameAndExtensionsAndExcludedExtensions")) {
-                if (splitCommand.length == 10) {
+                if (splitCommand.length == 11) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -718,7 +718,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[9]);
                     };
-                    List fileList = directoryHandler.getFilesForSearchNameAndExtensionsAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], splitCommand[4], recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesForSearchNameAndExtensionsAndExcludedExtensions(splitCommand[1], splitCommand[2], splitCommand[3], splitCommand[4], recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[10]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -729,7 +729,7 @@ public class App {
                 System.out.println("Done");
             }
             else if (splitCommand[0].equals("getFilesWithNames")) {
-                if (splitCommand.length == 8) {
+                if (splitCommand.length == 9) {
                     boolean recursive;
                     boolean includeFiles;
                     boolean includeDirectories;
@@ -775,7 +775,7 @@ public class App {
                         case "descending" -> OrderType.DESCENDING;
                         default -> throw new DirectoryHandlerExceptions.InvalidParametersException(splitCommand[7]);
                     };
-                    List fileList = directoryHandler.getFilesWithNames(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType);
+                    List fileList = directoryHandler.filterFileList(directoryHandler.getFilesWithNames(splitCommand[1], splitCommand[2], recursive, includeFiles, includeDirectories, sortingType, orderType), splitCommand[8]);
                     for (Object o : fileList) {
                         System.out.println(o);
                     }
@@ -865,17 +865,17 @@ public class App {
         System.out.println("getConfig <repositoryName>");
         System.out.println("getDirectorySize <directoryPathString>");
         System.out.println("getFileCount <directoryPathString>");
-        System.out.println("getFileListInDirectory <directoryPathString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
+        System.out.println("getFilesInDirectory <directoryPathString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
         System.out.println("getFileSize <filePathString>");
-        System.out.println("getFilesForDateRange <directoryPathString> <startDate> <endDate> <dateCreated> <dateModified> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
-        System.out.println("getFilesForExcludedExtensions <directoryPathString> <searchExcludedExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
-        System.out.println("getFilesForExtensions <directoryPathString> <searchExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
-        System.out.println("getFilesForExtensionsAndExcludedExtensions <searchExtensionsString> <searchExcludedExtensionsString> <directoryPathString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
-        System.out.println("getFilesForSearchName <directoryPathString> <search> <searchType> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
-        System.out.println("getFilesForSearchNameAndExcludedExtensions <directoryPathString> <search> <searchExcludedExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
-        System.out.println("getFilesForSearchNameAndExtensions <directoryPathString> <search> <searchExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
-        System.out.println("getFilesForSearchNameAndExtensionsAndExcludedExtensions <directoryPathString> <search> <searchExtensionsString> <searchExcludedExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
-        System.out.println("getFilesWithNames <directoryPathString> <searchListString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType>");
+        System.out.println("getFilesForDateRange <directoryPathString> <startDate> <endDate> <dateCreated> <dateModified> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
+        System.out.println("getFilesForExcludedExtensions <directoryPathString> <searchExcludedExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
+        System.out.println("getFilesForExtensions <directoryPathString> <searchExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
+        System.out.println("getFilesForExtensionsAndExcludedExtensions <searchExtensionsString> <searchExcludedExtensionsString> <directoryPathString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
+        System.out.println("getFilesForSearchName <directoryPathString> <search> <searchType> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
+        System.out.println("getFilesForSearchNameAndExcludedExtensions <directoryPathString> <search> <searchExcludedExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
+        System.out.println("getFilesForSearchNameAndExtensions <directoryPathString> <search> <searchExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
+        System.out.println("getFilesForSearchNameAndExtensionsAndExcludedExtensions <directoryPathString> <search> <searchExtensionsString> <searchExcludedExtensionsString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
+        System.out.println("getFilesWithNames <directoryPathString> <searchListString> <recursive> <includeFiles> <includeDirectories> <sortingType> <orderType> <filters>");
         System.out.println("moveFiles <filePathsString> <moveDestinationDirectoryString> <overwrite>");
         System.out.println("renameFile <filePathString> <newFileName>");
         System.out.println("updateConfig <repositoryName> <configString> <configUpdateType>");
