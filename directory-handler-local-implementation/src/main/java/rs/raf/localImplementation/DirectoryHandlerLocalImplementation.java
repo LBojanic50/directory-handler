@@ -152,6 +152,9 @@ public class DirectoryHandlerLocalImplementation implements IDirectoryHandlerSpe
             }
             DirectoryHandlerConfig config = getConfig(repositoryName);
             String parentDirectory = replaceSlashesInPath(Paths.get(directoryPathString).getParent().toString());
+            if (noFileAtPathCheck(parentDirectory)) {
+                createDirectories(parentDirectory);
+            }
             if (maxFileCountExceededCheck(config, parentDirectory)) {
                 throw new MaxFileCountExceededException(parentDirectory);
             }
@@ -175,14 +178,14 @@ public class DirectoryHandlerLocalImplementation implements IDirectoryHandlerSpe
             }
             DirectoryHandlerConfig config = getConfig(repositoryName);
             String parentDirectory = replaceSlashesInPath(Paths.get(filePathString).getParent().toString());
+            if (noFileAtPathCheck(parentDirectory)) {
+                createDirectories(parentDirectory);
+            }
             if (maxFileCountExceededCheck(config, parentDirectory)) {
                 throw new MaxFileCountExceededException(parentDirectory);
             }
             if (excludedExtensionsCheck(config, filePathString)) {
                 throw new FileExtensionException(filePathString);
-            }
-            if (noFileAtPathCheck(parentDirectory)) {
-                createDirectories(parentDirectory);
             }
             Files.createFile(workingDirectory.resolve(Paths.get(filePathString)));
             writeToFile(filePathString, "sampleText");
