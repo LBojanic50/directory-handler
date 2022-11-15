@@ -24,6 +24,7 @@ public class DirectoryHandlerManager {
     /**
      * Gets directory handler.
      *
+     * @param rootPathString path to the root directory.
      * @return IDirectoryHandlerSpecification specification.
      * @throws IOException                for IO reasons.
      * @throws BadPathException           if path is in a bad format.

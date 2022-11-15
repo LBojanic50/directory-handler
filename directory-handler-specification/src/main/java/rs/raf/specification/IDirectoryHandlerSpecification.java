@@ -21,6 +21,11 @@ public interface IDirectoryHandlerSpecification<T> {
      * Sets the root directory of the current session (can contain multiple repositories).
      *
      * @param rootPathString path to the root directory.
+     * @throws IOException                               for IO reasons.
+     * @throws BadPathException                          if path is in a bad format.
+     * @throws NoFileAtPathException                     if no file exists at path.
+     * @throws InvalidParametersException                if parameter(s) are invalid.
+     * @throws GeneralSecurityException if Google Drive fails to authenticate.
      */
     void setWorkingDirectory(final String rootPathString) throws NoFileAtPathException, GeneralSecurityException, InvalidParametersException, IOException, BadPathException;
     /**
