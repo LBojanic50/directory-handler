@@ -259,7 +259,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
             }
             OutputStream outputStream = new ByteArrayOutputStream();
             getFile.executeMediaAndDownloadTo(outputStream);
-            String fileName = filePathString.substring(filePathString.lastIndexOf("/") + 1);
+            String fileName = String.valueOf(Paths.get(filePathString).getFileName());
             java.io.File destinationFile = downloadDestinationDirectoryPath.resolve(fileName).toFile();
             InputStream inputStream = new ByteArrayInputStream(((ByteArrayOutputStream) outputStream).toByteArray());
             if (overwrite) {
@@ -273,7 +273,12 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
                 int i = 0;
                 while (true) {
                     try {
-                        Files.copy(tempFilePath, downloadDestinationDirectoryPath.resolve(fileName.substring(0, fileName.indexOf(".")) + suffix + fileName.substring(fileName.indexOf("."))));
+                        if(fileName.contains(".")){
+                            Files.copy(tempFilePath, downloadDestinationDirectoryPath.resolve(fileName.substring(0, fileName.indexOf(".")) + suffix + fileName.substring(fileName.indexOf("."))));
+                        }
+                        else{
+                            Files.copy(tempFilePath, downloadDestinationDirectoryPath.resolve(fileName + suffix));
+                        }
                         break;
                     }
                     catch (IOException e) {
@@ -372,7 +377,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
             throw new NoFileAtPathException(filePathString);
         }
         long fileSize;
-        String fileName = filePathString.substring(filePathString.lastIndexOf("/") + 1);
+        String fileName = String.valueOf(Paths.get(filePathString).getFileName());
         downloadFiles(filePathString, "temp", true);
         fileSize = FileUtils.sizeOf(workingDirectory.resolve(Paths.get("temp")).resolve(fileName).toFile());
         clearTemp();

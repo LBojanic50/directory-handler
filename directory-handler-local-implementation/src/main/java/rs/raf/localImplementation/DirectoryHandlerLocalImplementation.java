@@ -101,7 +101,12 @@ public class DirectoryHandlerLocalImplementation implements IDirectoryHandlerSpe
                     int i = 0;
                     while (true) {
                         try {
-                            Files.copy(originalPath, copyDestinationDirectoryPath.resolve(fileName.substring(0, fileName.indexOf(".")) + suffix + fileName.substring(fileName.indexOf("."))));
+                            if(fileName.contains(".")){
+                                Files.copy(originalPath, copyDestinationDirectoryPath.resolve(fileName.substring(0, fileName.indexOf(".")) + suffix + fileName.substring(fileName.indexOf("."))));
+                            }
+                            else{
+                                Files.copy(originalPath, copyDestinationDirectoryPath.resolve(fileName + suffix));
+                            }
                             break;
                         }
                         catch (IOException e) {
@@ -284,7 +289,12 @@ public class DirectoryHandlerLocalImplementation implements IDirectoryHandlerSpe
                     int i = 0;
                     while (true) {
                         try {
-                            Files.copy(originalPath, downloadDestinationDirectoryPath.resolve(fileName.substring(0, fileName.indexOf(".")) + suffix + fileName.substring(fileName.indexOf("."))));
+                            if(fileName.contains(".")){
+                                Files.copy(originalPath, downloadDestinationDirectoryPath.resolve(fileName.substring(0, fileName.indexOf(".")) + suffix + fileName.substring(fileName.indexOf("."))));
+                            }
+                            else{
+                                Files.copy(originalPath, downloadDestinationDirectoryPath.resolve(fileName + suffix));
+                            }
                             break;
                         }
                         catch (IOException e) {
@@ -643,7 +653,12 @@ public class DirectoryHandlerLocalImplementation implements IDirectoryHandlerSpe
                     int i = 0;
                     while (true) {
                         try {
-                            Files.move(originalPath, moveDestinationDirectoryPath.resolve(fileName.substring(0, fileName.indexOf(".")) + suffix + fileName.substring(fileName.indexOf("."))));
+                            if(fileName.contains(".")){
+                                Files.copy(originalPath, moveDestinationDirectoryPath.resolve(fileName.substring(0, fileName.indexOf(".")) + suffix + fileName.substring(fileName.indexOf("."))));
+                            }
+                            else{
+                                Files.copy(originalPath, moveDestinationDirectoryPath.resolve(fileName + suffix));
+                            }
                             break;
                         }
                         catch (IOException e) {
