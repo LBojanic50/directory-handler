@@ -108,17 +108,4 @@ public class DirectoryHandlerExceptions {
             super(String.format("Value %s cannot be less than 1!", value));
         }
     }
-    /**
-     * Occurs if command is invalid.
-     */
-    public static class InvalidCommandException extends Exception {
-        /**
-         * InvalidCommandException constructor.
-         *
-         * @param command command.
-         */
-        public InvalidCommandException(final String command) {
-            super(String.format("Invalid command %s!", command));
-        }
-    }
 }

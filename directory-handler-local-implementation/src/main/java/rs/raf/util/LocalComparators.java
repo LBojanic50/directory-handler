@@ -54,22 +54,8 @@ public class LocalComparators {
     public static class SizeComparator implements Comparator<LocalFile> {
         @Override
         public int compare(LocalFile file1, LocalFile file2) {
-            Long file1Size = null;
-            Long file2Size = null;
-            try {
-                file1Size = DirectoryHandlerManager.getDirectoryHandler().getFileSize(file1.getFile().getAbsolutePath());
-            }
-            catch (IOException | BadPathException | NoFileAtPathException | InvalidParametersException |
-                   NonExistentRepositoryException | MaxFileCountExceededException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                file2Size = DirectoryHandlerManager.getDirectoryHandler().getFileSize(file2.getFile().getAbsolutePath());
-            }
-            catch (IOException | BadPathException | NoFileAtPathException | MaxFileCountExceededException |
-                   InvalidParametersException | NonExistentRepositoryException e) {
-                throw new RuntimeException(e);
-            }
+            Long file1Size = file1.getFileMetadata().size();
+            Long file2Size = file2.getFileMetadata().size();
             return file1Size.compareTo(file2Size);
         }
     }

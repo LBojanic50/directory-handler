@@ -7,6 +7,7 @@ import rs.raf.enums.SearchType;
 import rs.raf.enums.SortingType;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -16,6 +17,12 @@ import rs.raf.exception.DirectoryHandlerExceptions.*;
  * Methods to use when using DirectoryHandler
  */
 public interface IDirectoryHandlerSpecification<T> {
+    /**
+     * Sets the root directory of the current session (can contain multiple repositories).
+     *
+     * @param rootPathString path to the root directory.
+     */
+    void setWorkingDirectory(final String rootPathString) throws NoFileAtPathException, GeneralSecurityException, InvalidParametersException, IOException, BadPathException;
     /**
      * Copies one or more files at the path(s) specified to the destination directory path with the option of overwriting. Multiple paths are delimited with -more-. Paths are slash delimited and should start with a repository name.
      *
@@ -344,10 +351,6 @@ public interface IDirectoryHandlerSpecification<T> {
      */
     List<T> getFilesWithNames(final String directoryPathString, final String searchListString, final boolean recursive, final boolean includeFiles, final boolean includeDirectories, final SortingType sortingType, final OrderType orderType) throws InvalidParametersException, NoFileAtPathException, IOException, BadPathException;
     /**
-     * Prints all commands and their usage.
-     */
-    void help();
-    /**
      * Move one or more files at the path(s) specified to the destination directory path with the option of overwriting. Multiple paths are delimited with -more-. Paths are slash delimited and should start with a repository name.
      *
      * @param filePathsString                Path(s) of the file to move. Multiple paths are delimited with -more-. Paths are slash delimited and should start with a repository name.
@@ -362,20 +365,6 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws MaxRepositorySizeExceededException if max repository size is exceeded.
      */
     void moveFiles(String filePathsString, String moveDestinationDirectoryString, boolean overwrite) throws NoFileAtPathException, IOException, BadPathException, InvalidParametersException, NonExistentRepositoryException, MaxFileCountExceededException, MaxRepositorySizeExceededException;
-    /**
-     * Prints the config specified.
-     *
-     * @param directoryHandlerConfig config to print.
-     * @throws IOException for IO reasons.
-     */
-    void printConfig(final DirectoryHandlerConfig directoryHandlerConfig) throws IOException;
-    /**
-     * Prints the list of files specified.
-     *
-     * @param fileList file list to print.
-     * @throws IOException for IO reasons.
-     */
-    void printFileList(final List<T> fileList) throws IOException;
     /**
      * Renames a file or directory at the path specified. Paths are slash delimited and should start with a repository name.
      *
@@ -408,10 +397,9 @@ public interface IDirectoryHandlerSpecification<T> {
      * @throws MaxFileCountExceededException             if max file count for directory is exceeded.
      * @throws InvalidParametersException                if parameter(s) are invalid.
      * @throws NonExistentRepositoryException            if path starts with a non-existent repository name.
-     * @throws InvalidParametersException                if config has invalid parameters.
      * @throws ValueInConfigCannotBeLessThanOneException if value specified in config is less than one.
      */
-    void updateConfig(final String repositoryName, final String configString, final ConfigUpdateType configUpdateType) throws InvalidParametersException, NoFileAtPathException, NonExistentRepositoryException, IOException, MaxFileCountExceededException, BadPathException, InvalidParametersException, ValueInConfigCannotBeLessThanOneException;
+    void updateConfig(final String repositoryName, final String configString, final ConfigUpdateType configUpdateType) throws NoFileAtPathException, NonExistentRepositoryException, IOException, MaxFileCountExceededException, BadPathException, InvalidParametersException, ValueInConfigCannotBeLessThanOneException;
     /**
      * Writes the specified text to specified file path. Paths are slash delimited and should start with a repository name.
      *
