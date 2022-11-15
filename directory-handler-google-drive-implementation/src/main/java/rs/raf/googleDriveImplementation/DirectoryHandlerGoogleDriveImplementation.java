@@ -86,7 +86,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
             }
         }
         TOKENS_DIRECTORY_PATH = workingDirectory.resolve("tokens").toString();
-        CREDENTIALS_FILE_PATH = workingDirectory.resolve("credentials.json").toString();
+        CREDENTIALS_FILE_PATH = Paths.get(System.getProperty("user.dir")).resolve("directory-handler-project").resolve("credentials.json").toString();
         initGoogleDrive();
     }
     @Override
@@ -855,7 +855,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load((JsonFactory) JSON_FACTORY, new InputStreamReader(inputStream));
         inputStream.close();
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder((HttpTransport) HTTP_TRANSPORT, (JsonFactory) JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH))).setAccessType("offline").build();
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(5555).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
     protected List<File> getCurrentDirectoryFiles(final String currentDirectoryId) throws IOException {
@@ -871,7 +871,6 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
         if (badPathCheck(filePathString)) {
             throw new BadPathException(filePathString);
         }
-        //List<String> directories = new LinkedList<>(Arrays.asList(filePathString.split("/")));
         String[] directories = filePathString.split("/");
         List<File> currentFileList;
         String currentDirectoryId = "root";
