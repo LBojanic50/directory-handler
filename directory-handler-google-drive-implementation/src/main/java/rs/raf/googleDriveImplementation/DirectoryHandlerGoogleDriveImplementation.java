@@ -613,7 +613,7 @@ public class DirectoryHandlerGoogleDriveImplementation implements IDirectoryHand
             }
         }
         TOKENS_DIRECTORY_PATH = workingDirectory.resolve("tokens").toString();
-        CREDENTIALS_FILE_PATH = Paths.get(System.getProperty("user.dir")).resolve("directory-handler-project").resolve("credentials.json").toString();
+        CREDENTIALS_FILE_PATH = Paths.get(System.getProperty("user.dir")).resolve("credentials.json").toString();
         initGoogleDrive();
     }
     @Override
